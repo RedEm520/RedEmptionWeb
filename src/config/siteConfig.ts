@@ -6,10 +6,10 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Firefly",
+	title: "Xtllnn blog",
 
 	// 站点副标题
-	subtitle: "Demo site",
+	subtitle: " 分享 日常 记录 学习 心得",
 
 	// 站点 URL
 	site_url: "https://firefly.cuteleaf.cn",
@@ -81,7 +81,7 @@ export const siteConfig: SiteConfig = {
 			alt: "🍀",
 		},
 		// 导航栏标题
-		title: "Firefly",
+		title: "Murasame",
 		// 全宽导航栏，导航栏是否占满屏幕宽度
 		widthFull: false,
 		// 导航菜单对齐方式，left：左对齐，center：居中
