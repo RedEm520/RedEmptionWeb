@@ -47,6 +47,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			"assets/images/DesktopWallpaper/d6.avif",
 			"assets/images/DesktopWallpaper/congyv1.avif",
 			"assets/images/DesktopWallpaper/congyv2.avif",
+			"assets/images/DesktopWallpaper/congyv4.avif",
+			"assets/images/DesktopWallpaper/congyv6.avif",
+			"assets/images/DesktopWallpaper/congyv7.avif",
+			"assets/images/DesktopWallpaper/congyv8.avif",
+			"assets/images/DesktopWallpaper/congyv9.avif",
 		],
 		// 移动背景图片（支持单张或多张随机）
 		// mobile: "assets/images/MobileWallpaper/m1.avif",
@@ -59,6 +64,11 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			"assets/images/MobileWallpaper/m6.avif",
 			"assets/images/MobileWallpaper/congyvv1.avif",
 			"assets/images/MobileWallpaper/congyvv2.avif",
+			"assets/images/MobileWallpaper/congyvv4.avif",
+			"assets/images/MobileWallpaper/congyvv6.avif",
+			"assets/images/MobileWallpaper/congyvv7.avif",
+			"assets/images/MobileWallpaper/congyvv8.avif",
+			"assets/images/MobileWallpaper/congyvv9.avif",
 		],
 		// 背景视频播放地址
 		// 支持单个视频路径（字符串）或多个视频循环（数组，参考上面壁纸配置）
@@ -82,12 +92,13 @@ export const backgroundWallpaper: BackgroundWallpaperConfig = {
 			titleSize: "4.5rem",
 			// 主页横幅副标题
 			subtitle: [
-				"In Reddened Chrysalis, I Once Rest",
-				"From Shattered Sky, I Free Fall",
-				"Amidst Silenced Stars, I Deep Sleep",
-				"Upon Lighted Fyrefly, I Soon Gaze",
-				"From Undreamt Night, I Thence Shine",
-				"In Finalized Morrow, I Full Bloom",
+				"时光流转,愿你与珍爱之人,能够再次重逢",
+				"这个世界太吵,别听,别看,别管,然后,向前走",
+				"虽然表白没有鲜花,也没有蜡烛,但我很喜欢她",
+				"遇见喜欢的人,一个人就会有所改变",
+				"如果因为害怕失败,而不去努力,那就不会有能够成功的人",
+				"即使世界毁灭,我也想见你一面",
+				"如果真爱有颜色,那么一定是绿色和粉色",
 			],
 			// 主页横幅副标题字体大小
 			subtitleSize: "1.5rem",
