@@ -2,7 +2,7 @@
 title: Java集合 学习心得📖
 published: 2026-08-20
 description: 在这里我会讲述学习Java集合的心得
-image: https://xtllnn-image.ccwu.cc/file/1787326386614_Java集合.png
+image: ./images/Java集合.avif
 tags:
   - 后端
   - 开发
