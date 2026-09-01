@@ -162,7 +162,69 @@ public static void main(String[] args) {
 1. **没遇到问题**：try 中没有遇到问题，就不会执行 catch 里的代码，而是把 try 里面所有的代码全部执行完毕，跳过 catch 往下执行
 2. **遇到多个问题**：try 中遇到多个问题，就要写多个 catch。catch 小括号中的参数是父子关系（多态）去接收异常，异常符合才会进入对应的 catch；如果多个异常之间存在父子关系，那么 <mark style="background-color:#FFE9A8;border-radius:8px;padding:1px 6px;color:inherit;">父类一定要写在最下面</mark>
 3. **没有被捕获**：try 中遇到的问题没有被捕获，那就相当于 try...catch 的代码白写了，最终还是会交给虚拟机进行处理
-4. **try 中出错**：try 中遇到了问题，try 下面的代码就不会执行，直接跳到对应的 catch 当中执行语句体；但如果没有对应的 catch 与之匹配，那么还是会交给虚拟机进行处理
+4. **try 中出错**：try 中遇到了问题，try 下面的代码就不会执行，直接跳到对应的 catch 当中执行语句体；但如果没有对应的 catch 与之匹配，那么还是会交给虚拟机进行处理  
+
+>**自定义异常：**  
+
+我们写代码的时候，时常会抛出异常，但是抛出的异常是Java定义好的很多时候可能表达不了自己写的程序出的是什么异常。这时我们就可以去自定义异常了。  
+<span style="background-color:#E3F0FF;border-radius:8px;padding:1px 6px;">自定义运行时异常代码示例：</span>  
+```java
+/**
+ * 自定义运行时异常
+ * 继承 RuntimeException，无需显式捕获或声明抛出
+ */
+public class MyRuntimeException extends RuntimeException {
+
+    // 无参构造
+    public MyRuntimeException() {
+        super();
+    }
+
+    // 带消息的构造
+    public MyRuntimeException(String message) {
+        super(message);
+    }
+
+    // 带消息和原因的构造
+    public MyRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    // 带原因的构造
+    public MyRuntimeException(Throwable cause) {
+        super(cause);
+    }
+}
+```  
+<span style="background-color:#E3F0FF;border-radius:8px;padding:1px 6px;">自定义编译时时异常代码示例：</span>    
+```java
+/**
+ * 自定义编译时异常（受检异常）
+ * 继承 Exception，必须由调用者捕获或声明抛出（throws）
+ */
+public class MyCheckedException extends Exception {
+
+    // 无参构造
+    public MyCheckedException() {
+        super();
+    }
+
+    // 带消息的构造
+    public MyCheckedException(String message) {
+        super(message);
+    }
+
+    // 带消息和原因的构造
+    public MyCheckedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    // 带原因的构造
+    public MyCheckedException(Throwable cause) {
+        super(cause);
+    }
+}
+```
 
 <hr style="height:3px;background:linear-gradient(90deg,#ADD8E6,#FFD966,#ADD8E6);border:none;border-radius:3px;">
 
