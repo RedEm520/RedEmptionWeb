@@ -6,7 +6,7 @@ const SITE_LANG = "zh_CN";
 
 export const siteConfig: SiteConfig = {
 	// 站点标题
-	title: "Xtllnn blog",
+	title: "黑曜星叙",
 
 	// 站点副标题
 	subtitle: " 分享 日常 记录 学习 心得",

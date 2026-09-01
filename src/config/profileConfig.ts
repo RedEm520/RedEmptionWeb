@@ -12,7 +12,7 @@ export const profileConfig: ProfileConfig = {
 	name: "忘痕",
 
 	// 个人签名
-	bio: "I will be a better man,this world is so beautiful, I want to see it all.",
+	bio: "阳光倾城却温暖不了人心。",
 
 	// 链接配置
 	// 已经预装的图标集：fa7-brands，fa7-regular，fa7-solid，material-symbols，simple-icons
@@ -31,6 +31,12 @@ export const profileConfig: ProfileConfig = {
 			name: "GitHub",
 			icon: "fa7-brands:github",
 			url: "https://github.com/RedEm520",
+			showName: false,
+		},
+		{
+			name: "Bilibili",
+			icon: "fa7-brands:bilibili",
+			url: "https://space.bilibili.com/1372445714",
 			showName: false,
 		},
 		{

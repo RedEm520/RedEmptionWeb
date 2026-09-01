@@ -52,6 +52,23 @@
 /* 确保平滑滚动 */
 html {
     scroll-behavior: smooth;
+    cursor: url('/mouse/default.cur'), default;
+}
+
+/* 自定义光标：默认光标与链接指针光标 */
+body {
+    cursor: inherit;
+}
+
+a[href],
+button,
+[role="button"],
+input,
+textarea,
+select,
+summary,
+.cursor-pointer {
+    cursor: url('/mouse/pointer.cur'), pointer;
 }
 
 /* 全站键盘焦点基线；组件可以在更高的层中覆盖间距或形态。 */
