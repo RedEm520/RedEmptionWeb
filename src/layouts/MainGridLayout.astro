@@ -1,4 +1,5 @@
 ---
+import HomeWallpaperStickers from "@components/features/HomeWallpaperStickers.astro";
 import Live2DWidget from "@components/features/Live2DWidget.astro";
 
 import SpineModel from "@components/features/SpineModel.astro";
@@ -727,9 +728,13 @@ const hasMultipleImages =
                         ))}
                 </div>
             )}
+            <div class="home-profile-welcome">欢迎访问</div>
         </div>
         </div>
     )}
+
+    <!-- 首页壁纸可拖拽贴纸（卡片框内左右各一张 + 底部横排） -->
+    {isHomePageCheck && <HomeWallpaperStickers />}
 
     <!-- Non-home non-post page title overlay (desktop only) -->
     {showBannerPageTitle && (
@@ -1058,13 +1063,18 @@ const hasMultipleImages =
     }
   }
 
-  /* 首页壁纸中央名片卡片 */
+  /* 首页壁纸中央名片卡片（透明底 + 一点点模糊，保留明显边框/阴影） */
   .home-profile-card {
     background: transparent;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
     border-radius: 1.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.18);
+    border: 2px solid rgba(255, 255, 255, 0.85);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.3),
+      0 12px 36px rgba(0, 0, 0, 0.26),
+      0 4px 14px rgba(0, 0, 0, 0.18),
+      inset 0 1px 0 rgba(255, 255, 255, 0.5);
     padding: 1.5rem 2.5rem;
     text-align: center;
     max-width: 30rem;
@@ -1074,8 +1084,12 @@ const hasMultipleImages =
   }
 
   :root.dark .home-profile-card {
-    background: transparent;
-    border-color: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.7);
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.22),
+      0 12px 36px rgba(0, 0, 0, 0.5),
+      0 4px 14px rgba(0, 0, 0, 0.35),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4);
   }
 
   .home-profile-avatar {
@@ -1083,35 +1097,74 @@ const hasMultipleImages =
     height: 7.5rem;
     border-radius: 50%;
     margin: 0 auto 1.25rem;
-    border: 3px solid rgba(255, 255, 255, 0.35);
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
+    border: 3px solid
+      color-mix(in srgb, var(--primary) 55%, rgba(255, 255, 255, 0.65));
+    box-shadow:
+      0 0 0 4px rgba(255, 255, 255, 0.28),
+      0 8px 28px rgba(0, 0, 0, 0.3);
   }
 
   .home-profile-name {
-    font-family: "Ma Shan Zheng", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-family: var(--font-theme-active, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif);
     font-size: 2.25rem;
     font-weight: 400;
     color: #ffffff;
     margin-bottom: 0.375rem;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
     line-height: 1.2;
+    animation: home-motion-text 0.9s ease-out 0.1s both;
   }
 
   .home-profile-title {
-    font-family: "Ma Shan Zheng", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-family: var(--font-theme-active, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif);
     font-size: 1.25rem;
     color: #ffffff;
     margin-bottom: 0.75rem;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.25);
+    animation: home-motion-text 0.9s ease-out 0.28s both;
   }
 
   .home-profile-bio {
-    font-family: "Ma Shan Zheng", "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif;
+    font-family: var(--font-theme-active, "PingFang SC", "Microsoft YaHei", "Noto Sans SC", sans-serif);
     font-size: 0.95rem;
     color: #ffffff;
     line-height: 1.6;
     margin-bottom: 1.25rem;
     text-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
+    animation: home-motion-text 0.9s ease-out 0.46s both;
+  }
+
+  .home-profile-welcome {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 1rem;
+    padding: 0.4rem 1.05rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.05em;
+    background: linear-gradient(
+      135deg,
+      color-mix(in srgb, var(--primary) 72%, #ffffff),
+      color-mix(in srgb, var(--primary) 60%, #f3a2bc)
+    );
+    border-radius: 999px;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+    animation: home-motion-text 0.9s ease-out 0.66s both;
+  }
+
+  @keyframes home-motion-text {
+    from {
+      opacity: 0;
+      transform: translateY(0.6rem);
+      filter: blur(6px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
   }
 
   .home-profile-links {

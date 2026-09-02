@@ -10,6 +10,7 @@ import MusicPlayer from "@/components/features/MusicPlayer.astro";
 import {
 	backgroundWallpaper,
 	displaySettingsConfig,
+	fontSwitchEnabled,
 	navBarConfig,
 	siteConfig,
 } from "@/config";
@@ -206,6 +207,11 @@ const logoVariants = await Promise.all(
                             <Icon is:inline name="material-symbols:palette-outline" class="text-[1.25rem]"></Icon>
                         </button>
                 )}
+                {fontSwitchEnabled && (
+                <button aria-label={i18n(I18nKey.fontSwitch)} aria-controls="font-switch" aria-expanded="false" title="切换字体" class="btn-plain scale-animation rounded-lg h-9 w-9 md:h-11 md:w-11 active:scale-90" id="font-switch">
+                    <Icon is:inline name="material-symbols:text-fields" class="text-[1.25rem]"></Icon>
+                </button>
+                )}
                 {/* @ts-ignore */}
                 <LightDarkSwitch client:load></LightDarkSwitch>
                 <button aria-label="Menu" aria-controls="nav-menu-panel" aria-expanded="false" name="Nav Menu" class="btn-plain scale-animation rounded-lg w-9 h-9 md:w-11 md:h-11 active:scale-90 lg:hidden!" id="nav-menu-switch">
@@ -224,6 +230,8 @@ const logoVariants = await Promise.all(
 </div>
 
 <script>
+import { cycleFontOption, getCurrentFontOption, initFontSwitch } from "@/utils/font-switch";
+
 function loadButtonScript() {
     let settingBtn = document.getElementById("display-settings-switch");
     if (settingBtn) {
@@ -309,6 +317,22 @@ function loadButtonScript() {
         };
     }
 
+    // 字体切换按钮：点击循环切换博客正文字体
+    let fontSwitchBtn = document.getElementById("font-switch");
+    if (fontSwitchBtn) {
+        function updateFontSwitchTitle() {
+            let current = getCurrentFontOption();
+            let tip = "切换字体：" + current.label;
+            fontSwitchBtn!.setAttribute("title", tip);
+            fontSwitchBtn!.setAttribute("aria-label", tip);
+        }
+        fontSwitchBtn.onclick = function () {
+            cycleFontOption();
+            updateFontSwitchTitle();
+        };
+        updateFontSwitchTitle();
+    }
+
     document.addEventListener("click", function(event) {
         const panels = ["display-setting", "nav-menu-panel", "music-nav-panel", "theme-mode-panel"];
         const buttons = ["display-settings-switch", "nav-menu-switch", "music-player-switch", "scheme-switch"];
@@ -326,6 +350,18 @@ function loadButtonScript() {
 }
 
 loadButtonScript();
+
+// 初始化字体切换：应用 localStorage 中保存的字体
+initFontSwitch();
+
+// Swup 页面切换后需重新应用字体（防止 head 被重写后字体源丢失）
+if (window.swup && window.swup.hooks) {
+    window.swup.hooks.on("content:replace", initFontSwitch);
+} else {
+    document.addEventListener("swup:enable", function () {
+        window.swup.hooks.on("content:replace", initFontSwitch);
+    });
+}
 
 // 为semifull模式添加滚动检测逻辑
 function initSemifullScrollDetection() {

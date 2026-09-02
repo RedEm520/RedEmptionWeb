@@ -24,6 +24,8 @@ export const ko: Translation = {
 	[Key.tableOfContents]: "목차",
 	[Key.tocEmpty]: "이 페이지에는 목차가 없습니다",
 	[Key.music]: "음악",
+	[Key.fontSwitch]: "글꼴 전환",
+	[Key.fontSwitchLabel]: "글꼴",
 	[Key.dynamic]: "일상",
 	[Key.latestDynamics]: "최신 일상",
 	[Key.moreDynamics]: "더 많은 일상",

@@ -1,0 +1,282 @@
+---
+import { readdirSync } from "node:fs";
+import { homeWallpaperStickersConfig as cfg } from "@/config/homeWallpaperStickersConfig";
+import { url } from "@/utils/url-utils";
+
+/* 读取 public/sticker/ 下的所有贴纸图 */
+let files: string[] = [];
+try {
+	files = readdirSync("public/sticker")
+		.filter((f) => /\.(png|webp|gif|jpg|jpeg)$/i.test(f))
+		.sort();
+} catch {
+	files = [];
+}
+
+// 卡片框内两张（第一个左、第二个右）；其余放底部一排
+const cardSet = new Set(cfg.cardStickers);
+const cardStickers = cfg.cardStickers
+	.filter((f) => files.includes(f))
+	.map((f, i) => ({
+		file: f,
+		side: i === 0 ? "left" : "right",
+		bottomIndex: -1,
+	}));
+const bottomStickers = files
+	.filter((f) => !cardSet.has(f))
+	.map((f, i) => ({ file: f, side: "", bottomIndex: i }));
+const stickers = [...cardStickers, ...bottomStickers];
+---
+
+{cfg.enable && stickers.length > 0 && (
+  <div id="home-ww-stickers" aria-hidden="true" data-config={JSON.stringify(cfg)} data-stickers={JSON.stringify(stickers)}>
+    {stickers.map((s) => (
+      <div class="ww-sticker" data-sticker data-side={s.side} data-bottom-index={s.bottomIndex >= 0 ? s.bottomIndex : undefined}>
+        <img
+          src={url(`/sticker/${s.file}`)}
+          alt=""
+          draggable="false"
+          loading="eager"
+          decoding="async"
+          referrerpolicy="no-referrer"
+        />
+      </div>
+    ))}
+  </div>
+)}
+
+<style is:global>
+  /* 覆盖整个首页 hero/壁纸区；容器本身不拦截事件，贴纸自己可点可拖。
+     尺寸/旋转/层级全部放 CSS，确保一定生效（不依赖内联插值）。 */
+  #home-ww-stickers {
+    position: absolute !important;
+    inset: 0 !important;
+    pointer-events: none !important;
+    z-index: 25;
+  }
+  #home-ww-stickers .ww-sticker {
+    position: absolute;
+    width: min(130px, 8vw, 15vh);
+    pointer-events: auto;
+    cursor: grab;
+    touch-action: none;
+    transform: rotate(-6deg);
+  }
+  #home-ww-stickers .ww-sticker.dragging {
+    cursor: grabbing;
+  }
+  #home-ww-stickers .ww-sticker img {
+    display: block;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+  }
+</style>
+
+<script>
+	// 读取容器上的 data 属性并在每次 Swup 切换后重新初始化，保证 SPA 导航后仍可拖拽
+	var wwDragSet = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+
+	function setupHomeWallpaperStickers() {
+		var root = document.getElementById("home-ww-stickers");
+		if (!root) return;
+
+		var cfg = {};
+		try {
+			cfg = JSON.parse(root.getAttribute("data-config") || "{}");
+		} catch (e) {
+			cfg = {};
+		}
+
+		function clamp(v, min, max) {
+			return Math.max(min, Math.min(max, v));
+		}
+
+		// 视口坐标 → 容器内坐标（贴纸是容器的子元素，用容器本地坐标定位）
+		function toLocal(r) {
+			var cr = root.getBoundingClientRect();
+			return {
+				left: r.left - cr.left,
+				top: r.top - cr.top,
+				right: r.right - cr.left,
+				bottom: r.bottom - cr.top,
+			};
+		}
+
+		// 避让文字列表已清空（卡片框内 + 导航栏文字避让均已解除），贴纸可自由拖动
+		function getNoGo() {
+			var sels = [];
+			var rects = [];
+			for (var i = 0; i < sels.length; i++) {
+				var nodes = document.querySelectorAll(sels[i]);
+				for (var j = 0; j < nodes.length; j++) {
+					rects.push(toLocal(nodes[j].getBoundingClientRect()));
+				}
+			}
+			return rects;
+		}
+
+		function resolve(x, y, w, h, rects) {
+			var s = { left: x, top: y, right: x + w, bottom: y + h };
+			for (var pass = 0; pass < 2; pass++) {
+				for (var k = 0; k < rects.length; k++) {
+					var ng = rects[k];
+					if (s.left < ng.right && s.right > ng.left && s.top < ng.bottom && s.bottom > ng.top) {
+						var pl = ng.right - s.left;
+						var pr = s.right - ng.left;
+						var pt = ng.bottom - s.top;
+						var pb = s.bottom - ng.top;
+						var mn = Math.min(pl, pr, pt, pb);
+						if (mn === pl) x = ng.right;
+						else if (mn === pr) x = ng.left - w;
+						else if (mn === pt) y = ng.bottom;
+						else y = ng.top - h;
+						s.left = x;
+						s.top = y;
+						s.right = x + w;
+						s.bottom = y + h;
+					}
+				}
+			}
+			return { x: x, y: y };
+		}
+
+		function clampToRoot(x, y, w, h) {
+			var cw = root.clientWidth;
+			var ch = root.clientHeight;
+			return {
+				x: clamp(x, 0, Math.max(0, cw - w)),
+				y: clamp(y, 0, Math.max(0, ch - h)),
+			};
+		}
+
+		function hideIfMobile() {
+			if (cfg.hideOnMobile && window.innerWidth <= (cfg.mobileBreakpoint || 768)) {
+				root.style.display = "none";
+			} else {
+				root.style.display = "";
+			}
+		}
+
+		function initOne(el) {
+			var w = el.offsetWidth;
+			var h = el.offsetHeight;
+			var cw = root.clientWidth;
+			var ch = root.clientHeight;
+			var side = el.getAttribute("data-side") || "";
+			var x;
+			var y;
+
+			if (side === "left" || side === "right") {
+				var card = document.querySelector(".home-profile-card");
+				// 放进卡片框内部：左贴纸靠卡片内左、右贴纸靠卡片内右，垂直居中
+				var cardHalfW = card ? card.offsetWidth / 2 : 160;
+				var cx = cw / 2;
+				x =
+					side === "left"
+						? cx - cardHalfW + (cfg.cardSideGap || 16)
+						: cx + cardHalfW - w - (cfg.cardSideGap || 16);
+				y = Math.max(0, (ch - h) / 2);
+			} else {
+				var idx = parseInt(el.getAttribute("data-bottom-index") || "0", 10);
+				var total = root.querySelectorAll("[data-bottom-index]").length;
+				var gap = cfg.gap || 48;
+				var totalW = total * w + (total - 1) * gap;
+				var startX = (cw - totalW) / 2;
+				x = startX + idx * (w + gap);
+				y = ch - h - (cfg.bottomPad || 40);
+			}
+
+			var p = resolve(x, y, w, h, getNoGo());
+			var c = clampToRoot(p.x, p.y, w, h);
+			el.style.left = c.x + "px";
+			el.style.top = c.y + "px";
+		}
+
+		function setupDrag(el) {
+			if (wwDragSet && wwDragSet.has(el)) return;
+			if (wwDragSet) wwDragSet.add(el);
+
+			var dragging = false;
+			var sx = 0;
+			var sy = 0;
+			var ox = 0;
+			var oy = 0;
+			var dragNoGo = [];
+
+			el.addEventListener("pointerdown", function (e) {
+				if (e.button !== 0 && e.pointerType === "mouse") return;
+				dragging = true;
+				sx = e.clientX;
+				sy = e.clientY;
+				ox = el.offsetLeft;
+				oy = el.offsetTop;
+				dragNoGo = getNoGo();
+				el.classList.add("dragging");
+				try {
+					el.setPointerCapture(e.pointerId);
+				} catch (err) {}
+				e.preventDefault();
+			});
+
+			el.addEventListener("pointermove", function (e) {
+				if (!dragging) return;
+				var w = el.offsetWidth;
+				var h = el.offsetHeight;
+				var nx = ox + (e.clientX - sx);
+				var ny = oy + (e.clientY - sy);
+				var p = resolve(nx, ny, w, h, dragNoGo);
+				var c = clampToRoot(p.x, p.y, w, h);
+				el.style.left = c.x + "px";
+				el.style.top = c.y + "px";
+				e.preventDefault();
+			});
+
+			function stop(e) {
+				if (!dragging) return;
+				dragging = false;
+				el.classList.remove("dragging");
+				try {
+					el.releasePointerCapture(e.pointerId);
+				} catch (err) {}
+			}
+			el.addEventListener("pointerup", stop);
+			el.addEventListener("pointercancel", stop);
+		}
+
+		function initAll() {
+			hideIfMobile();
+			var nodes = root.querySelectorAll("[data-sticker]");
+			for (var i = 0; i < nodes.length; i++) {
+				initOne(nodes[i]);
+				setupDrag(nodes[i]);
+			}
+		}
+
+		initAll();
+	}
+
+	if (document.readyState === "loading") {
+		document.addEventListener("DOMContentLoaded", setupHomeWallpaperStickers);
+	} else {
+		setupHomeWallpaperStickers();
+	}
+
+	window.addEventListener("load", setupHomeWallpaperStickers);
+	window.addEventListener("resize", setupHomeWallpaperStickers);
+
+	// Swup 页面切换后重新初始化（每次进入页面都重置位置）
+	function reinitHomeWallpaperStickers() {
+		setupHomeWallpaperStickers();
+	}
+	if (window.swup && window.swup.hooks) {
+		window.swup.hooks.on("content:replace", reinitHomeWallpaperStickers);
+	} else {
+		document.addEventListener("swup:enable", function () {
+			window.swup.hooks.on("content:replace", reinitHomeWallpaperStickers);
+		});
+	}
+</script>

@@ -24,6 +24,8 @@ export const ru: Translation = {
 	[Key.tableOfContents]: "Содержание",
 	[Key.tocEmpty]: "На этой странице нет оглавления",
 	[Key.music]: "Музыка",
+	[Key.fontSwitch]: "Переключить шрифт",
+	[Key.fontSwitchLabel]: "Шрифт",
 	[Key.dynamic]: "Моменты",
 	[Key.latestDynamics]: "Последние публикации",
 	[Key.moreDynamics]: "Больше публикаций",

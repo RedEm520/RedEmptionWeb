@@ -13,8 +13,12 @@ import ConfigCarrier from "@components/layout/ConfigCarrier.astro";
 import {
 	analyticsConfig,
 	backgroundWallpaper,
+	defaultFontSwitchOption,
 	displaySettingsConfig,
 	expressiveCodeConfig,
+	fontSwitchCssVar,
+	fontSwitchOptions,
+	fontSwitchStorageKey,
 	profileConfig,
 	siteConfig,
 } from "@/config";
@@ -570,6 +574,72 @@ const siteLang = lang.replace("_", "-");
 
     <!-- Font Setup (Astro Font API) -->
     <FontSetup />
+
+    <!-- 运行期字体切换：默认字体样式表（首次访问即加载，避免白屏/默认字体闪烁） -->
+    {defaultFontSwitchOption.cssUrl && (
+      <link rel="stylesheet" href={defaultFontSwitchOption.cssUrl} />
+    )}
+
+    <!-- 运行期字体切换：在页面渲染前应用已保存的字体，避免字体闪烁 -->
+    <script
+      is:inline
+      define:vars={{
+        fontSwitchCssVar,
+        fontSwitchStorageKey,
+        fontSwitchOptions: JSON.stringify(
+          fontSwitchOptions.map((o) => ({
+            id: o.id,
+            cssUrl: o.cssUrl,
+            fontFamily: o.fontFamily,
+          })),
+        ),
+      }}
+    >
+      (function () {
+        const cssVar = fontSwitchCssVar;
+        const storageKey = fontSwitchStorageKey;
+        let options = [];
+        try {
+          options = JSON.parse(fontSwitchOptions || "[]");
+        } catch (e) {
+          options = [];
+        }
+
+        function findOption(id) {
+          for (let i = 0; i < options.length; i++) {
+            if (options[i].id === id) return options[i];
+          }
+          return null;
+        }
+
+        function ensureLink(cssUrl) {
+          if (!cssUrl) return;
+          if (
+            document.querySelector(
+              'link[rel="stylesheet"][href="' + cssUrl + '"]',
+            )
+          ) {
+            return;
+          }
+          const link = document.createElement("link");
+          link.rel = "stylesheet";
+          link.href = cssUrl;
+          document.head.appendChild(link);
+        }
+
+        let saved = null;
+        try {
+          saved = localStorage.getItem(storageKey);
+        } catch (e) {
+          saved = null;
+        }
+        const option = saved ? findOption(saved) : null;
+        if (option) {
+          ensureLink(option.cssUrl);
+          document.documentElement.style.setProperty(cssVar, option.fontFamily);
+        }
+      })();
+    </script>
   </head>
   <body
     class="min-h-screen"

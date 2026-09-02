@@ -10,6 +10,7 @@
  */
 import { Font } from "astro:assets";
 import { fontConfig } from "@/config";
+import { fontSwitchCssVar } from "@/config/fontSwitchConfig";
 import { collectUsedFontCssVars } from "@/utils/fontHelper";
 
 // 使用共享的工具函数收集所有需要加载的 CSS 变量名（selected + 各区域字体，去重）
@@ -70,7 +71,7 @@ const navbarTitleFontVar = fontConfig.enable
     }` : ""}
 
     body {
-      font-family: ${bodyFontFamily};
+      font-family: var(${fontSwitchCssVar}, ${bodyFontFamily});
     }
   `}
   />

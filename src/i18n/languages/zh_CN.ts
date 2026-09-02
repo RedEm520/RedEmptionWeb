@@ -24,6 +24,8 @@ export const zh_CN: Translation = {
 	[Key.tableOfContents]: "文章目录",
 	[Key.tocEmpty]: "当前页面没有目录",
 	[Key.music]: "音乐",
+	[Key.fontSwitch]: "切换字体",
+	[Key.fontSwitchLabel]: "字体",
 	[Key.dynamic]: "动态",
 	[Key.latestDynamics]: "最新动态",
 	[Key.moreDynamics]: "更多动态",

@@ -20,6 +20,8 @@ enum I18nKey {
 	tableOfContents = "tableOfContents",
 	tocEmpty = "tocEmpty",
 	music = "music",
+	fontSwitch = "fontSwitch",
+	fontSwitchLabel = "fontSwitchLabel",
 
 	// 动态
 	dynamic = "dynamic",

@@ -24,6 +24,8 @@ export const en: Translation = {
 	[Key.tableOfContents]: "Table of Contents",
 	[Key.tocEmpty]: "No table of contents on this page",
 	[Key.music]: "Music",
+	[Key.fontSwitch]: "Switch font",
+	[Key.fontSwitchLabel]: "Font",
 	[Key.dynamic]: "Moments",
 	[Key.latestDynamics]: "Latest Moments",
 	[Key.moreDynamics]: "More moments",

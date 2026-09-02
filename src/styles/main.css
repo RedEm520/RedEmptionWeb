@@ -60,6 +60,20 @@ body {
     cursor: inherit;
 }
 
+/* 运行期字体切换：博客正文字体（导航栏按钮可循环切换）
+   默认值为霞鹜文楷，可通过 --font-theme-active 覆盖（localStorage 记忆选择） */
+:root {
+    --font-theme-active:
+        'LXGW WenKai', 'LXGW WenKai Screen', '霞鹜文楷', 'Noto Serif SC', serif;
+}
+
+body {
+    font-family:
+        var(--font-theme-active, system-ui, -apple-system, BlinkMacSystemFont,
+            'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+            Roboto, sans-serif);
+}
+
 a[href],
 button,
 [role="button"],

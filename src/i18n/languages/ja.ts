@@ -24,6 +24,8 @@ export const ja: Translation = {
 	[Key.tableOfContents]: "目次",
 	[Key.tocEmpty]: "このページには目次がありません",
 	[Key.music]: "音楽",
+	[Key.fontSwitch]: "フォントを切り替え",
+	[Key.fontSwitchLabel]: "フォント",
 	[Key.dynamic]: "つぶやき",
 	[Key.latestDynamics]: "最新の投稿",
 	[Key.moreDynamics]: "もっと見る",
