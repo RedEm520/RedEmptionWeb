@@ -34,7 +34,7 @@ export interface HomeWallpaperStickersConfig {
 export const homeWallpaperStickersConfig: HomeWallpaperStickersConfig = {
 	enable: true,
 	// 卡片框内左右各一张
-	cardStickers: ["furina_final_512.png", "nilou_final_512.png"],
+	cardStickers: ["furina_final_512.webp", "nilou_final_512.webp"],
 	hideOnMobile: true,
 	mobileBreakpoint: 768,
 	rotation: "-6deg",

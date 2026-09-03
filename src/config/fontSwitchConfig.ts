@@ -56,38 +56,21 @@ export const fontSwitchOptions: FontSwitchOption[] = [
 		id: "lxgw-wenkai",
 		label: "霞鹜文楷",
 		isDefault: true,
-		fontFamily:
-			"'LXGW WenKai', 'LXGW WenKai Screen', '霞鹜文楷', 'Noto Serif SC', serif",
+		fontFamily: "'LXGW WenKai', 'LXGW WenKai Screen', '霞鹜文楷', serif",
 		// 霞鹜文楷网络字体包（jsdelivr 提供，含 @font-face 与字体文件）
 		cssUrl: "https://cdn.jsdelivr.net/npm/lxgw-wenkai-webfont@1/style.css",
 	},
 	{
-		id: "noto-serif-sc",
-		label: "思源宋体",
-		fontFamily: "'Noto Serif SC', 'Songti SC', 'SimSun', serif",
-		cssUrl:
-			"https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700&display=swap",
-	},
-	{
-		id: "noto-sans-sc",
-		label: "思源黑体",
-		fontFamily: "'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif",
-		cssUrl:
-			"https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap",
-	},
-	{
+		// 主题自带字体（Astro Font API 构建期已加载），切换时无需再从 Google Fonts 加载
 		id: "zen-maru-gothic",
 		label: "Zen Maru Gothic",
 		fontFamily: "'Zen Maru Gothic', 'Yu Gothic', sans-serif",
-		cssUrl:
-			"https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700&display=swap",
 	},
 	{
+		// 主题自带字体（Astro Font API 构建期已加载），无需额外 cssUrl
 		id: "inter",
 		label: "Inter",
 		fontFamily: "'Inter', system-ui, sans-serif",
-		cssUrl:
-			"https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap",
 	},
 	{
 		id: "system",
