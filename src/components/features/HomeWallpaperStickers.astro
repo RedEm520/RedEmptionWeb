@@ -21,17 +21,23 @@ const cardStickers = cfg.cardStickers
 		file: f,
 		side: i === 0 ? "left" : "right",
 		bottomIndex: -1,
+		delay: i === 0 ? 0.68 : 0.8,
 	}));
 const bottomStickers = files
 	.filter((f) => !cardSet.has(f))
-	.map((f, i) => ({ file: f, side: "", bottomIndex: i }));
+	.map((f, i) => ({
+		file: f,
+		side: "",
+		bottomIndex: i,
+		delay: 0.95 + i * 0.12,
+	}));
 const stickers = [...cardStickers, ...bottomStickers];
 ---
 
 {cfg.enable && stickers.length > 0 && (
   <div id="home-ww-stickers" aria-hidden="true" data-config={JSON.stringify(cfg)} data-stickers={JSON.stringify(stickers)}>
     {stickers.map((s) => (
-      <div class="ww-sticker" data-sticker data-side={s.side} data-bottom-index={s.bottomIndex >= 0 ? s.bottomIndex : undefined}>
+      <div class="ww-sticker" data-sticker data-side={s.side} data-bottom-index={s.bottomIndex >= 0 ? s.bottomIndex : undefined} style={`--ww-delay: ${s.delay ?? 0.68}s;`}>
         <img
           src={url(`/sticker/${s.file}`)}
           alt=""
@@ -53,6 +59,24 @@ const stickers = [...cardStickers, ...bottomStickers];
     inset: 0 !important;
     pointer-events: none !important;
     z-index: 25;
+    opacity: 0; /* 初始隐藏，定位完后再显示/入场 */
+  }
+  /* 显示时触发整组贴纸的入场动画 */
+  #home-ww-stickers.ww-stickers-in {
+    opacity: 1;
+  }
+  @keyframes ww-sticker-in {
+    from {
+      opacity: 0;
+      transform: scale(0.4) translateY(0.6rem) rotate(-6deg);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1) translateY(0) rotate(-6deg);
+    }
+  }
+  #home-ww-stickers.ww-stickers-in .ww-sticker {
+    animation: ww-sticker-in 0.8s cubic-bezier(0.16, 1, 0.3, 1) var(--ww-delay, 0.68s) both;
   }
   #home-ww-stickers .ww-sticker {
     position: absolute;
@@ -79,9 +103,19 @@ const stickers = [...cardStickers, ...bottomStickers];
 <script>
 	// 读取容器上的 data 属性并在每次 Swup 切换后重新初始化，保证 SPA 导航后仍可拖拽
 	var wwDragSet = typeof WeakSet !== "undefined" ? new WeakSet() : null;
+	var wwRoot = null;
+
+	// 定位完成后显示并触发入场动画（Swup 重新插入新容器时也要能再次显示）
+	function showStickers() {
+		if (wwRoot) {
+			wwRoot.classList.add("ww-stickers-in");
+			wwRoot.style.opacity = "1";
+		}
+	}
 
 	function setupHomeWallpaperStickers() {
 		var root = document.getElementById("home-ww-stickers");
+		wwRoot = root;
 		if (!root) return;
 
 		var cfg = {};
@@ -187,7 +221,9 @@ const stickers = [...cardStickers, ...bottomStickers];
 				var totalW = total * w + (total - 1) * gap;
 				var startX = (cw - totalW) / 2;
 				x = startX + idx * (w + gap);
-				y = ch - h - (cfg.bottomPad || 40);
+				// 底部贴纸收敛到可视区域内，避免 Swup 返回时被裁掉
+				var visibleBottom = Math.min(ch, window.innerHeight);
+				y = visibleBottom - h - (cfg.bottomPad || 40);
 			}
 
 			var p = resolve(x, y, w, h, getNoGo());
@@ -265,12 +301,33 @@ const stickers = [...cardStickers, ...bottomStickers];
 		setupHomeWallpaperStickers();
 	}
 
-	window.addEventListener("load", setupHomeWallpaperStickers);
-	window.addEventListener("resize", setupHomeWallpaperStickers);
+	// 图片加载完成后定位并淡入
+	window.addEventListener("load", function () {
+		setupHomeWallpaperStickers();
+		showStickers();
+		// 布局稳定后再校正一次
+		setTimeout(function () {
+			setupHomeWallpaperStickers();
+		}, 300);
+	});
+	window.addEventListener("resize", function () {
+		setupHomeWallpaperStickers();
+	});
+
+	// 若脚本在 load 之后才执行（页面已完全加载），补一次定位并显示
+	if (document.readyState === "complete") {
+		setupHomeWallpaperStickers();
+		showStickers();
+	}
 
 	// Swup 页面切换后重新初始化（每次进入页面都重置位置）
 	function reinitHomeWallpaperStickers() {
 		setupHomeWallpaperStickers();
+		showStickers();
+		// 过渡动画结束后再校正一次，避免拿到过渡中的错误尺寸
+		setTimeout(function () {
+			setupHomeWallpaperStickers();
+		}, 300);
 	}
 	if (window.swup && window.swup.hooks) {
 		window.swup.hooks.on("content:replace", reinitHomeWallpaperStickers);
