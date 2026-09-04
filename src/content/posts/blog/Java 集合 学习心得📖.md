@@ -6,7 +6,8 @@ image: ./images/Java集合.avif
 tags:
   - 后端
   - 开发
-category: 后端开发
+  - Java
+category: Java学习
 draft: false
 ---
 
