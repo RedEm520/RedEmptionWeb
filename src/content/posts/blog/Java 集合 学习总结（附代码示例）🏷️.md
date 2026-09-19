@@ -1,7 +1,7 @@
 ---
 title: Java 集合 学习总结（附代码示例）🏷️
 published: 2026-09-19
-description: 这是文章的简短描述
+description: Java 集合学习总结：从泛型讲起，梳理单列集合（List / Set）与双列集合（Map）的常用实现类、底层数据结构与源码，再到 Collections 工具类和不可变集合，全程配可运行代码示例。
 image: ./images/Java集合笔记.avif
 tags:
   - 开发
