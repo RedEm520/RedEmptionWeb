@@ -455,7 +455,7 @@ select 字段列表 from 表名 limit 起始索引, 查询记录数 ;
 
 前面讲解了 DQL 语句的完整语法及编写顺序，这里说明 DQL 语句在**执行时的先后顺序**——也就是先执行哪一部分、后执行哪一部分。
 
-![执行顺序](./images/MySQL语法.avif)
+![执行顺序](./images/MySQL基础-语法篇🐟️/MySQL语法.avif)
 
 > [!IMPORTANT] 理解执行顺序
 > 编写顺序（from → where → group by → having → select → order by → limit）和**执行顺序**并不完全一致：数据库先找到数据（from）、再过滤（where）、再分组聚合（group by / having）、最后才 select 并排序分页。理解了这个，很多「为什么这里不能写别名/where 里不能用聚合函数」的疑惑就解开了。
@@ -475,7 +475,7 @@ select * from mysql.user;
 
 查询结果如下：
 
-![user表](./images/MySQL语法1.avif)
+![user表](./images/MySQL基础-语法篇🐟️/MySQL语法1.avif)
 
 其中 `Host` 代表当前用户访问的主机：如果为 `localhost`，仅代表只能够在当前本机访问，**不可以远程访问**；`User` 代表访问该数据库的用户名。在 MySQL 中需要通过 `Host` 和 `User` 来**唯一标识一个用户**。
 

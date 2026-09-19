@@ -979,7 +979,7 @@ public class Demo {
 
 **继承结构：**
 
-![阻塞队列继承结构](./images/阻塞队列继承结构.avif)
+![阻塞队列继承结构](./images/Java-多线程-学习总结（附代码示例）🐳/阻塞队列继承结构.avif)
 
 **常见的两个实现类：**
 
@@ -1123,7 +1123,7 @@ public class Demo {
 
 **各状态之间的转换关系，如下图所示：**
 
-![线程各种状态的转换](./images/线程各种状态的转换.avif)
+![线程各种状态的转换](./images/Java-多线程-学习总结（附代码示例）🐳/线程各种状态的转换.avif)
 
 > [!NOTE] 状态转换速记
 > `start()` 让 NEW → RUNNABLE；抢锁失败 → BLOCKED；`wait()/join()` → WAITING；`sleep()/wait(long)/join(long)` → TIMED_WAITING；跑完 → TERMINATED。
