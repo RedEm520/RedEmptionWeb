@@ -4,8 +4,10 @@ published: 2026-09-10
 description: MySQL 核心语法总结：常用函数、约束与外键、多表查询（连接 / 联合 / 子查询）、事务与隔离级别，配 SQL 示例与重点提醒。
 image: ./images/MySQL基础-核心语法篇.avif
 tags:
+  - MySQL
   - 数据库
-category: MySQL
+  - 开发
+category: 数据库
 draft: false
 ---
 

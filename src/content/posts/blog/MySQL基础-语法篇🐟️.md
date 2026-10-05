@@ -4,8 +4,10 @@ published: 2026-09-08
 description: 本篇讲述MySQL基础以及SQL语句相关知识
 image: ./images/MySQL基础-语法篇.avif
 tags:
+  - MySQL
   - 数据库
-category: MySQL
+  - 开发
+category: 数据库
 draft: false
 ---
 > [!NOTE] 关于本文
