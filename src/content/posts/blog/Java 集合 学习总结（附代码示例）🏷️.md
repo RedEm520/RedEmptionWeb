@@ -47,6 +47,7 @@ draft: false
 > [!IMPORTANT] 集合的两条基础认知
 > - **集合只能存引用数据类型**：要存基本数据类型（int、double…）必须存对应的**包装类**（Integer、Double…）
 > - **集合体系结构**是重点：`Collection`（单列）与 `Map`（双列）两条主线
+
 ## 泛型  
 
 >在学习集合之前来学学前置知识泛型叭喵~  
@@ -460,6 +461,7 @@ public static void main(String[] args) {
 
 > [!IMPORTANT] `remove(1)` 删的是索引还是元素？
 > 方法重载时，Java 会**优先调用实参类型与形参类型一致的方法**，所以 `remove(1)` 删的是**索引 1 上的元素**；想删「元素 1」应写成 `remove(Integer.valueOf(1))`。
+
 #### ArrayList集合  
 
 - List接口的实现类
@@ -509,6 +511,7 @@ public static void main(String[] args) {
 > - 频繁**头尾增删** → `LinkedList`（链表，改指针就行）
 >
 > 日常业务中 `ArrayList` 用得最多。
+
 **特有方法**：  
 
 |方法名|说明|
@@ -665,6 +668,7 @@ int index = (数组长度 - 1) & 哈希值；
 ![JDK8之后的HashSet](./images/Java-集合-学习总结（附代码示例）🏷️/15_JKD8以后哈希表.avif)  
 > [!WARNING] 自定义类型去重的关键
 > `HashSet` 存储自定义类型元素时，要想实现元素的唯一，**必须同时重写 `hashCode()` 和 `equals()` 方法**，否则内容相同的对象会被当成不同元素存进去。
+
 #### LinkedHashSet集合  
 
 **特点**：
@@ -918,6 +922,7 @@ public class TreeSetDemo {
 > - 返回**正数** → 当前元素较大，存**右边**
 >
 > 记住这条，就明白「`TreeSet` 里 `compareTo` 返回 0 为什么能去重」了。
+
 ## 双列集合  
 
 
@@ -966,6 +971,7 @@ Map是双列集合的顶层接口，它的功能全部双列集合都可以继�
 > - **键已存在**：覆盖原有的值，并**返回被覆盖的旧值**
 >
 > 想知道这次 `put` 有没有覆盖，看返回值就行。
+
 #### Map集合的获取功能  
 
 |方法名|说明|
@@ -1202,6 +1208,7 @@ public class MapDemo3 {
 > - **0.75**：默认加载因子 `DEFAULT_LOAD_FACTOR`
 > - **2 倍**：扩容时数组扩为原来的两倍
 > - **8 / 64**：链表长度 > 8 **且** 数组长度 ≥ 64 时，链表转红黑树（否则先扩容数组）
+
 ```Java
 1.看源码之前需要了解的一些内容
 Node<K,V>[] table   哈希表结构中数组的名字
@@ -1739,6 +1746,7 @@ public static int getSum(int... arr) {
 
 > [!NOTE] 小技巧
 > `-(返回值 + 1)` 就是「如果要把这个元素插进去，应该插在第几个位置」。另外二分查找要求集合**已经排好序**。
+
 **copy**
 
 把src中的元素拷贝到dest中，如果src的长度 > dest的长度，方法会报错。
@@ -1806,6 +1814,7 @@ System.out.println(Collections.max(list7, (o1, o2) -> o1.length() - o2.length())
 > [!WARNING] 两个限制
 > - 用 `Set.of(...)` 创建不可变 Set 时，参数**必须唯一**，否则抛 `IllegalArgumentException`
 > - `Map.of(...)` 参数有上限：**最多 10 个键值对**（20 个参数），超过要用 `ofEntries` / `copyOf`
+
 ```Java
 //一旦创建完毕之后，是无法进行修改的，在下面的代码中，只能进行查询操作
 List<String> list = List.of("张三", "李四", "王五", "赵六");
@@ -1959,21 +1968,6 @@ mindmap
 > - `TreeSet` / `TreeMap` 的 `compareTo` / `compare` 返回 **0 会被当作重复**而去重
 > - `Map.of(...)` **最多 10 个键值对**，超过要用 `ofEntries` / `copyOf`
 > - 不可变集合创建后**不能增删改**，改就抛异常
-
-### 灵魂四问（面试自测）
-
-1. **`ArrayList` 和 `LinkedList` 的区别？** —— 数组 vs 链表：查询快慢与增删快慢正好相反
-2. **`HashSet` 怎么保证元素唯一？** —— 靠 `hashCode()` 定位 + `equals()` 比较，两者都要重写
-3. **`TreeSet` 怎么排序？两种方式？** —— 自然排序（实现 `Comparable`）或比较器排序（传 `Comparator`）
-4. **`Map` 有几种遍历方式？** —— 键找值（`keySet` + `get`）、键值对（`entrySet`）、`forEach`
-
-### 下一步可以学
-
-- **泛型进阶**：类型擦除、`? extends` / `? super` 的读写场景（PECS 原则）
-- **集合源码**：`ArrayList` 扩容、`HashMap` 扩容与树化、红黑树旋转
-- **并发集合**：`ConcurrentHashMap`、`CopyOnWriteArrayList`
-- **Stream 流**：用声明式写法替代大半集合遍历代码
-- **线程安全**：为什么 `ArrayList` / `HashMap` 在多线程下不安全
 
 > [!NOTE] 结尾
 > 集合类多，但规律很清晰：**先看底层数据结构，再推特点**。数组查得快、链表改得快、哈希表管去重、红黑树管排序——记住这四句，整张集合体系就能自己推出来。有写错或能优化的地方，欢迎一起交流进步喵！🏷️💪
